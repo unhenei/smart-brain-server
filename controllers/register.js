@@ -2,6 +2,10 @@ const handleRegister = (db, bcrypt) => (req, res) => {
 	const {name, email, password} = req.body;
 	const salt = bcrypt.genSaltSync(10);
 	const hash = bcrypt.hashSync(password, salt);
+	if (!name || !email || !password || !(email.includes('@'))){
+		// if any field is leave in blank OR no '@' in email
+		return res.status(400).json('invalid submission')
+	}
 	db.transaction(trx => {
 		trx.insert({
 			hash: hash,
