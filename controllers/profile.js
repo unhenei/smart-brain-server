@@ -189,8 +189,26 @@ const handleProfileChange = (db, bcrypt) => (req, res) => {
 	// .catch(err => res.status(400).json('unable to register'))
 }
 
+const handleProfileDelete = (db) => (req, res) => {
+	const {email} = req.body;
+	db.transaction(trx => {
+		trx('users').where('email', email).del().returning('email')
+		.then(email => {
+			console.log('email',email);
+			return trx('register')
+					.where('email', email[0].email)
+					.del()
+					.then(res.json('account deleted'))
+		})
+		.then(trx.commit)
+		.catch(trx.rollback)
+	})
+	.catch(err => res.status(400).json('unable to delete account'))
+}
+
 
 module.exports={
 	handleProfile,
-	handleProfileChange
+	handleProfileChange,
+	handleProfileDelete
 }
