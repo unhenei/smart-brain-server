@@ -194,7 +194,6 @@ const handleProfileDelete = (db) => (req, res) => {
 	db.transaction(trx => {
 		trx('users').where('email', email).del().returning('email')
 		.then(email => {
-			console.log('email',email);
 			return trx('register')
 					.where('email', email[0].email)
 					.del()
