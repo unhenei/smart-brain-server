@@ -119,7 +119,7 @@ const handleProfileChange = (db, bcrypt) => (req, res) => {
 			.then(trx.commit)
 			.catch(trx.rollback)
 		})
-		.catch(err => console.log(err))
+		.catch(err => res.status(400).json(err))
 
 	//WORK FOR NAME
 	// db.transaction(trx => {
